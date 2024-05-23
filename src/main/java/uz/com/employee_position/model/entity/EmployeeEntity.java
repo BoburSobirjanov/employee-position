@@ -1,10 +1,11 @@
-package uz.com.employee_position.model;
+package uz.com.employee_position.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.com.employee_position.model.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +19,14 @@ import java.util.List;
 @Builder
 public class EmployeeEntity extends BaseEntity implements UserDetails {
 
+    @Column(nullable = false)
     private String fullNameUz;
 
+    @Column(nullable = false)
     private String fullNameRu;
+
+    @Column(nullable = false)
+    private String fullNameEng;
 
     @Column(nullable = false,  unique = true)
     private String email;

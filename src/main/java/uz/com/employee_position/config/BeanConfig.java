@@ -1,4 +1,4 @@
-package uz.com.employee_position;
+package uz.com.employee_position.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
