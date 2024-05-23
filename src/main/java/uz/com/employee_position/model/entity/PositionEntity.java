@@ -1,8 +1,9 @@
-package uz.com.employee_position.model;
+package uz.com.employee_position.model.entity;
 
 
 import jakarta.persistence.Entity;
 import lombok.*;
+import uz.com.employee_position.model.BaseEntity;
 
 
 @Entity(name = "positions")
@@ -11,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class PositionEntity extends BaseEntity{
+public class PositionEntity extends BaseEntity {
 
     private String nameUz;
     private String nameRu;

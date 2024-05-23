@@ -1,4 +1,4 @@
-package uz.com.railway_reservation.response;
+package uz.com.employee_position.response;
 
 import lombok.Getter;
 

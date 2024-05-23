@@ -1,7 +1,7 @@
-package uz.com.railway_reservation.response;
+package uz.com.employee_position.response;
 
 import lombok.*;
-import uz.com.railway_reservation.model.dto.user.UserForFront;
+import uz.com.employee_position.model.dto.EmployeeForFront;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +14,5 @@ public class JwtResponse {
 
     private String refreshToken;
 
-    private UserForFront user;
+    private EmployeeForFront employeeForFront;
 }

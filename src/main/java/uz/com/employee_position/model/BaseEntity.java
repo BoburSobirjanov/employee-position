@@ -1,6 +1,7 @@
-package uz.com.employee_position;
+package uz.com.employee_position.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +25,11 @@ public abstract class BaseEntity {
     protected UUID id;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     protected LocalDateTime createdTime;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     protected LocalDateTime updatedTime;
 
     @Column(columnDefinition = "boolean default false")
@@ -34,6 +37,7 @@ public abstract class BaseEntity {
 
     protected UUID deletedBy;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     protected LocalDateTime deletedTime;
 
     protected UUID createdBy;
