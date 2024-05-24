@@ -1,4 +1,4 @@
-package uz.com.employee_position.service;
+package uz.com.employee_position.service.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

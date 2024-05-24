@@ -15,8 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uz.com.employee_position.filter.FilterToken;
-import uz.com.employee_position.service.AuthenticationService;
-import uz.com.employee_position.service.JwtService;
+import uz.com.employee_position.service.auth.AuthenticationService;
+import uz.com.employee_position.service.auth.JwtService;
 
 import java.util.List;
 

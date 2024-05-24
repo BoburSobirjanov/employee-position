@@ -4,7 +4,6 @@ package uz.com.employee_position.model.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
-import uz.com.employee_position.model.BaseEntity;
 
 
 @Entity(name = "positions")

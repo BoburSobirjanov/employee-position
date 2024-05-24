@@ -2,15 +2,14 @@ package uz.com.employee_position.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.com.employee_position.service.AuthenticationService;
-import uz.com.employee_position.service.JwtService;
+import uz.com.employee_position.service.auth.AuthenticationService;
+import uz.com.employee_position.service.auth.JwtService;
 
 import java.io.IOException;
 

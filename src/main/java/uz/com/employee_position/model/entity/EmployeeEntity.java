@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.com.employee_position.model.BaseEntity;
+import uz.com.employee_position.model.enums.UserRole;
 
 import java.util.ArrayList;
 import java.util.Collection;

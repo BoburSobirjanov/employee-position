@@ -1,4 +1,4 @@
-package uz.com.employee_position.model;
+package uz.com.employee_position.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
