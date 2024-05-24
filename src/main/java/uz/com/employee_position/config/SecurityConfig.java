@@ -27,7 +27,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
-    private final String[] permitAll = {"/swagger-ui/**", "/v3/api-docs/**", "/api/v1/auth/**","/api/v1/excel"};
+    private final String[] permitAll = {"/swagger-ui/**", "/v3/api-docs/**", "/api/v1/auth/**","/api/v1/employee/excel"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

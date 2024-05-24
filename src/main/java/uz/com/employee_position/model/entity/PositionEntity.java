@@ -1,6 +1,7 @@
 package uz.com.employee_position.model.entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.*;
 import uz.com.employee_position.model.BaseEntity;
@@ -14,8 +15,7 @@ import uz.com.employee_position.model.BaseEntity;
 @Builder
 public class PositionEntity extends BaseEntity {
 
-    private String nameUz;
-    private String nameRu;
-    private String nameEn;
+    @Column(nullable = false,unique = true)
+    private String name;
 
 }
