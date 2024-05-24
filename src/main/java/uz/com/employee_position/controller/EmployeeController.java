@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/employee")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -50,8 +50,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/get-all")
-    public List<EmployeeEntity> getAll(){
-        return employeeService.getAll();
+    public StandardResponse<List<EmployeeEntity>> getAll(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ){
+        return employeeService.getAll(page, size);
     }
 
     @PutMapping("/update")
@@ -60,6 +63,22 @@ public class EmployeeController {
             @RequestParam UUID id
             ){
         return employeeService.update(employeeDto, id);
+    }
+
+    @PostMapping("/apply-to-admin")
+    public StandardResponse<String> applyToAdmin(
+            @RequestParam String email
+    ){
+        return employeeService.applyToAdmin(email);
+    }
+
+    @DeleteMapping("/delete-by-position")
+    @PreAuthorize("hasRole('ADMIN')")
+    public StandardResponse<String> deleteByPosition(
+            @RequestParam String name,
+            Principal principal
+    ){
+        return employeeService.deleteEmployeeByPosition(name, principal);
     }
 
 }

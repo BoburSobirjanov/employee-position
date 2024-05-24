@@ -7,6 +7,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.com.employee_position.exception.AuthenticationFailedException;
@@ -131,7 +133,7 @@ public class EmployeeService {
     }
 
     public void getAllEmployeeExcel(HttpServletResponse response,String language) throws IOException {
-        List<EmployeeEntity> employeeList = employeeRepository.findAllEmployee();
+        List<EmployeeEntity> employeeList = employeeRepository.getAll();
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Employees");
         HSSFRow row = sheet.createRow(0);
@@ -189,11 +191,45 @@ public class EmployeeService {
                 .build();
     }
 
-    public List<EmployeeEntity> getAll(){
-        List<EmployeeEntity> employeeEntities = employeeRepository.findAllEmployee();
-        if (employeeEntities==null){
-            throw new DataNotFoundException("Employees not found!");
+    public StandardResponse<List<EmployeeEntity>> getAll(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAllEmployee(pageable).getContent();
+        return StandardResponse.<List<EmployeeEntity>>builder()
+                .status(Status.SUCCESS)
+                .data(employeeEntities)
+                .message("employee list "+page+"-page")
+                .build();
+    }
+
+    public StandardResponse<String> applyToAdmin(String email){
+        EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(email);
+        if (employee==null){
+            throw new DataNotFoundException("employee not found!");
         }
-        return employeeEntities;
+        employee.setRole(UserRole.ADMIN);
+        employeeRepository.save(employee);
+        return StandardResponse.<String>builder()
+                .status(Status.SUCCESS)
+                .data("COMPLETED!")
+                .message("employee role changed to admin!")
+                .build();
+    }
+
+    public StandardResponse<String> deleteEmployeeByPosition(String name,Principal principal){
+        List<EmployeeEntity> employeeEntities = employeeRepository.getAll();
+        EmployeeEntity employeeEntity = employeeRepository.findEmployeeEntityByEmail(principal.getName());
+        for (EmployeeEntity employee: employeeEntities) {
+            if (employee.getPosition().getName().equals(name)){
+                employee.setDeleted(true);
+                employee.setDeletedTime(LocalDateTime.now());
+                employee.setDeletedBy(employeeEntity.getId());
+                employeeRepository.save(employee);
+            }
+        }
+        return StandardResponse.<String>builder()
+                .status(Status.SUCCESS)
+                .data("DELETED")
+                .message("employees deleted")
+                .build();
     }
 }
