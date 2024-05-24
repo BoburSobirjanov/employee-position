@@ -1,6 +1,7 @@
-package uz.com.employee_position.model.dto;
+package uz.com.employee_position.model.dto.request;
 
 import lombok.*;
+
 
 @AllArgsConstructor
 @NoArgsConstructor

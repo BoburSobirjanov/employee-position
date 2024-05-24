@@ -1,21 +1,22 @@
-package uz.com.employee_position.service;
+package uz.com.employee_position.service.position;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.com.employee_position.exception.DataHasAlreadyExistException;
 import uz.com.employee_position.exception.DataNotFoundException;
-import uz.com.employee_position.model.dto.PositionDto;
-import uz.com.employee_position.model.dto.PositionForFront;
+import uz.com.employee_position.exception.UserBadRequestException;
+import uz.com.employee_position.model.dto.request.PositionDto;
+import uz.com.employee_position.model.dto.response.PositionForFront;
 import uz.com.employee_position.model.entity.EmployeeEntity;
 import uz.com.employee_position.model.entity.PositionEntity;
 import uz.com.employee_position.repository.EmployeeRepository;
 import uz.com.employee_position.repository.PositionRepository;
-import uz.com.employee_position.response.StandardResponse;
-import uz.com.employee_position.response.Status;
+import uz.com.employee_position.model.dto.response.StandardResponse;
+import uz.com.employee_position.model.dto.response.Status;
+import uz.com.employee_position.service.position.PositionServiceImpl;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -24,11 +25,14 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PositionService {
+public class PositionService implements PositionServiceImpl {
 
     private final ModelMapper modelMapper;
     private final EmployeeRepository employeeRepository;
     private final PositionRepository positionRepository;
+
+
+
 
     public StandardResponse<PositionForFront> save(PositionDto positionDto, Principal principal){
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(principal.getName());
@@ -46,6 +50,11 @@ public class PositionService {
                 .build();
     }
 
+
+
+
+
+
     public StandardResponse<PositionForFront> getById(UUID id){
         PositionEntity position = positionRepository.findPositionEntityById(id);
         if (position==null){
@@ -58,6 +67,11 @@ public class PositionService {
                 .message("this is position!")
                 .build();
     }
+
+
+
+
+
 
     public StandardResponse<String> deleteById(UUID id,Principal principal){
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(principal.getName());
@@ -77,12 +91,21 @@ public class PositionService {
                 .build();
     }
 
+
+
+
+
     public void checkHasPosition(String name){
         PositionEntity position = positionRepository.findPositionEntityByName(name);
         if (position!=null){
             throw new DataHasAlreadyExistException("position has already exist");
         }
     }
+
+
+
+
+
 
     public StandardResponse<List<PositionEntity>> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);

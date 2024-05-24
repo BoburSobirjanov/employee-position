@@ -1,4 +1,4 @@
-package uz.com.employee_position.response;
+package uz.com.employee_position.model.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

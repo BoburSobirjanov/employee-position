@@ -1,4 +1,4 @@
-package uz.com.employee_position.model.entity;
+package uz.com.employee_position.model.enums;
 
 import lombok.Getter;
 

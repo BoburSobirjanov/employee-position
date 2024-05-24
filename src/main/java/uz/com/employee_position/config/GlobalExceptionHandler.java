@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import uz.com.employee_position.exception.*;
-import uz.com.employee_position.response.StandardResponse;
-import uz.com.employee_position.response.Status;
+import uz.com.employee_position.model.dto.response.StandardResponse;
+import uz.com.employee_position.model.dto.response.Status;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

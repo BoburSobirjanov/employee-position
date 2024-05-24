@@ -1,4 +1,4 @@
-package uz.com.employee_position.service;
+package uz.com.employee_position.service.employee;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,15 +14,19 @@ import org.springframework.stereotype.Service;
 import uz.com.employee_position.exception.AuthenticationFailedException;
 import uz.com.employee_position.exception.DataNotFoundException;
 import uz.com.employee_position.exception.UserBadRequestException;
-import uz.com.employee_position.model.dto.EmployeeDto;
-import uz.com.employee_position.model.dto.EmployeeForFront;
-import uz.com.employee_position.model.dto.LoginDto;
+import uz.com.employee_position.model.dto.request.ChangeOrSetPosition;
+import uz.com.employee_position.model.dto.request.EmployeeDto;
+import uz.com.employee_position.model.dto.response.EmployeeForFront;
+import uz.com.employee_position.model.dto.request.LoginDto;
 import uz.com.employee_position.model.entity.EmployeeEntity;
-import uz.com.employee_position.model.entity.UserRole;
+import uz.com.employee_position.model.entity.PositionEntity;
+import uz.com.employee_position.model.enums.UserRole;
 import uz.com.employee_position.repository.EmployeeRepository;
-import uz.com.employee_position.response.JwtResponse;
-import uz.com.employee_position.response.StandardResponse;
-import uz.com.employee_position.response.Status;
+import uz.com.employee_position.model.dto.response.JwtResponse;
+import uz.com.employee_position.model.dto.response.StandardResponse;
+import uz.com.employee_position.model.dto.response.Status;
+import uz.com.employee_position.repository.PositionRepository;
+import uz.com.employee_position.service.auth.JwtService;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -32,12 +36,16 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeService implements EmployeeServiceImpl {
 
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final EmployeeRepository employeeRepository;
+    private final PositionRepository positionRepository;
     private final JwtService jwtService;
+
+
+
 
     public StandardResponse<JwtResponse> save(EmployeeDto employeeDto) {
         checkUserEmailAndPhoneNumber(employeeDto.getEmail(),employeeDto.getPhoneNumber());
@@ -68,6 +76,13 @@ public class EmployeeService {
                 .build();
     }
 
+
+
+
+
+
+
+
     public void checkUserEmailAndPhoneNumber(String email, String phoneNumber) {
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(email);
         if (employee!=null){
@@ -77,6 +92,13 @@ public class EmployeeService {
             throw new UserBadRequestException("Number has already exist!");
         }
     }
+
+
+
+
+
+
+
     public StandardResponse<JwtResponse> login(LoginDto loginDto) {
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(loginDto.getEmail());
         if (employee == null){
@@ -101,6 +123,10 @@ public class EmployeeService {
         }
     }
 
+
+
+
+
     public StandardResponse<EmployeeForFront> getById(UUID id){
         EmployeeEntity employee= employeeRepository.getEmployeeEntityById(id);
         if (employee==null){
@@ -113,6 +139,10 @@ public class EmployeeService {
                 .message("Completed!")
                 .build();
     }
+
+
+
+
 
     public StandardResponse<String> deleteById(UUID id, Principal principal){
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(principal.getName());
@@ -131,6 +161,10 @@ public class EmployeeService {
                 .build();
 
     }
+
+
+
+
 
     public void getAllEmployeeExcel(HttpServletResponse response,String language) throws IOException {
         List<EmployeeEntity> employeeList = employeeRepository.getAll();
@@ -168,6 +202,10 @@ public class EmployeeService {
         ops.close();
     }
 
+
+
+
+
     public StandardResponse<EmployeeForFront> update(EmployeeDto employeeDto,UUID id){
         EmployeeEntity employee = employeeRepository.getEmployeeEntityById(id);
         if (employee==null){
@@ -191,6 +229,10 @@ public class EmployeeService {
                 .build();
     }
 
+
+
+
+
     public StandardResponse<List<EmployeeEntity>> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<EmployeeEntity> employeeEntities = employeeRepository.findAllEmployee(pageable).getContent();
@@ -200,6 +242,10 @@ public class EmployeeService {
                 .message("employee list "+page+"-page")
                 .build();
     }
+
+
+
+
 
     public StandardResponse<String> applyToAdmin(String email){
         EmployeeEntity employee = employeeRepository.findEmployeeEntityByEmail(email);
@@ -214,6 +260,9 @@ public class EmployeeService {
                 .message("employee role changed to admin!")
                 .build();
     }
+
+
+
 
     public StandardResponse<String> deleteEmployeeByPosition(String name,Principal principal){
         List<EmployeeEntity> employeeEntities = employeeRepository.getAll();
@@ -230,6 +279,47 @@ public class EmployeeService {
                 .status(Status.SUCCESS)
                 .data("DELETED")
                 .message("employees deleted")
+                .build();
+    }
+
+
+
+
+    public StandardResponse<String> changeEmployeePosition(ChangeOrSetPosition changeOrSetPosition){
+        EmployeeEntity employee = employeeRepository.getEmployeeEntityById(UUID.fromString(changeOrSetPosition.getEmployeeId()));
+        PositionEntity position = positionRepository.findPositionEntityById(UUID.fromString(changeOrSetPosition.getPositionId()));
+        if (employee==null || position==null){
+            throw new UserBadRequestException("Employee or position not found!");
+        }
+        employee.setPosition(position);
+        employeeRepository.save(employee);
+
+        return StandardResponse.<String>builder()
+                .status(Status.SUCCESS)
+                .data("CHANGED")
+                .message("employee's position changed!")
+                .build();
+    }
+
+    public List<EmployeeEntity> getAllEmployeeByPosition(UUID id){
+        List<EmployeeEntity> employeeEntities = employeeRepository.findEmployeeEntityByPosition(id);
+        if (employeeEntities==null){
+            throw new DataNotFoundException("employees not found same this position!");
+        }
+        return employeeEntities;
+    }
+
+    public StandardResponse<String> removePositionFromEmployee(UUID id){
+        EmployeeEntity employee = employeeRepository.getEmployeeEntityById(id);
+        if (employee==null){
+            throw new DataNotFoundException("employee not found!");
+        }
+        employee.setPosition(null);
+        employeeRepository.save(employee);
+        return StandardResponse.<String>builder()
+                .status(Status.SUCCESS)
+                .data("REMOVED")
+                .message("position remove from employee")
                 .build();
     }
 }

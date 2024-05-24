@@ -18,11 +18,15 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, UUID> 
 
     @Query("select u from employees as u where u.isDeleted=false and u.email=?1")
     EmployeeEntity findEmployeeEntityByEmail(String email);
+
     @Query("select u from employees as u  where u.isDeleted=false")
     Page<EmployeeEntity> findAllEmployee(Pageable pageable);
+
     @Query("select u from employees as u  where u.isDeleted=false")
     List<EmployeeEntity> getAll();
 
     @Query("select u from employees as u where u.isDeleted=false and u.id=?1")
     EmployeeEntity getEmployeeEntityById(UUID id);
+    @Query("select u from employees as u where u.isDeleted=false and u.position.id=?1")
+    List<EmployeeEntity> findEmployeeEntityByPosition(UUID id);
 }
